@@ -1,6 +1,6 @@
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import DetailProduct from "@/views/DetailProduct";
-import { retrieveProducts, retrieveProductById } from "../../../utils/db/servicefirebase";
+import { retrieveProductById } from "../../../utils/db/servicefirebase";
 
 // CSR - dinonaktifkan
 // import { useRouter } from "next/router";
@@ -10,14 +10,40 @@ import { retrieveProducts, retrieveProductById } from "../../../utils/db/service
 //   return <DetailProduct id={produk as string} />;
 // }
 
-// SSR - dinonaktifkan
-// export const getServerSideProps: GetServerSideProps = async (context) => {
+// SSG - dinonaktifkan (tidak bisa digunakan saat deployment Vercel)
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   try {
+//     const products = await retrieveProducts("products");
+//     const paths = products.map((product: any) => ({
+//       params: { produk: product.id },
+//     }));
+//     return {
+//       paths,
+//       fallback: false,
+//     };
+//   } catch (error) {
+//     return {
+//       paths: [],
+//       fallback: false,
+//     };
+//   }
+// };
+
+// export const getStaticProps: GetStaticProps = async (context) => {
 //   const { produk } = context.params!;
 //   try {
 //     const data = await retrieveProductById("products", produk as string);
-//     return { props: { product: data ?? null } };
+//     return {
+//       props: {
+//         product: data ?? null,
+//       },
+//     };
 //   } catch (error) {
-//     return { props: { product: null } };
+//     return {
+//       props: {
+//         product: null,
+//       },
+//     };
 //   }
 // };
 
@@ -38,39 +64,13 @@ export default function ProdukDetailPage({ product }: Props) {
   return <DetailProduct product={product ?? undefined} />;
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  try {
-    const products = await retrieveProducts("products");
-    const paths = products.map((product: any) => ({
-      params: { produk: product.id },
-    }));
-    return {
-      paths,
-      fallback: false,
-    };
-  } catch (error) {
-    return {
-      paths: [],
-      fallback: false,
-    };
-  }
-};
-
-export const getStaticProps: GetStaticProps = async (context) => {
+// SSR - aktif untuk deployment
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const { produk } = context.params!;
-
   try {
     const data = await retrieveProductById("products", produk as string);
-    return {
-      props: {
-        product: data ?? null,
-      },
-    };
+    return { props: { product: data ?? null } };
   } catch (error) {
-    return {
-      props: {
-        product: null,
-      },
-    };
+    return { props: { product: null } };
   }
 };
