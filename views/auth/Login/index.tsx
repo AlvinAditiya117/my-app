@@ -89,7 +89,7 @@ const Tampilanlogin = () => {
 
             <br /> <br />
             <button
-              onClick={() => signIn("google", { callbackUrl, redirect: false })}
+              onClick={() => signIn("google", { callbackUrl })}
               className={style.login__form__item__button}
               disabled={isLoading}
             >
@@ -98,7 +98,7 @@ const Tampilanlogin = () => {
 
             <br /> <br />
             <button
-              onClick={() => signIn("github", { callbackUrl, redirect: false })}
+              onClick={() => signIn("github", { callbackUrl })}
               className={style.login__form__item__button}
               disabled={isLoading}
             >
